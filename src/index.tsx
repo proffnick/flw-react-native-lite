@@ -1,3 +1,3 @@
-export function multiply(a: number, b: number): Promise<number> {
-  return Promise.resolve(a * b);
-}
+export { default as FLWReactNativeLite } from './components/PaymentWebView';
+export { validatePaymentProp } from './utils/validatePaymentProps';
+export { PaymentProp, ReturnObject } from './types/PaymentProp';

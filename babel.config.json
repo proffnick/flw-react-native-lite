@@ -1,0 +1,28 @@
+{
+  "presets": [
+    [
+      "module:react-native-builder-bob/babel-preset",
+      {
+        "modules": "commonjs"
+      }
+    ],
+    [
+      "@babel/preset-env",
+      {
+        "modules": "commonjs"
+      }
+    ],
+    [
+      "@babel/preset-react",
+      {
+        "modules": "commonjs"
+      }
+    ],
+    [
+      "@babel/preset-typescript",
+      {
+        "modules": "commonjs"
+      }
+    ]
+  ]
+}
