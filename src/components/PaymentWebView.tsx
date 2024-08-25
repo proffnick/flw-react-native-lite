@@ -28,7 +28,8 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
 
   const handleNavigationStateChange = (navState: any) => {
     try {
-      if (navState.url.includes(payment.redirect_url)) {
+      const rdr = payment?.redirect_url || 'https://google.com';
+      if (navState.url.includes(rdr)) {
         if (webViewRef.current) {
           if (webViewRef.current.clearCache)
             webViewRef.current.clearCache(true);
@@ -91,6 +92,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
 
   const startPaymentProcessing = useCallback(async () => {
     try {
+      const rdr = payment?.redirect_url || 'https://google.com';
       const paymentInfo = {
         public_key: payment.public_key,
         tx_ref: payment.tx_ref,
@@ -102,7 +104,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
           name: payment.customer.name,
         },
         customizations: payment.customizations,
-        redirect_url: payment.redirect_url || 'https://google.com',
+        redirect_url: rdr,
         meta: payment.meta,
         payment_plan: payment.payment_plan,
         subaccounts: payment.subaccounts,
