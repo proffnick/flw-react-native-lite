@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
+  SafeAreaView,
   Modal,
-  View,
   ActivityIndicator,
-  StyleSheet,
-  StatusBar,
   Alert,
   TouchableOpacity,
+  Platform,
   Text,
 } from 'react-native';
-import WebView from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import { PaymentProp, ReturnObject, statusType } from '../types/PaymentProp';
+import useStyle from '../hooks/useStyle';
 
 interface PaymentWebViewProps {
   payment: PaymentProp;
@@ -21,10 +21,10 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
   payment,
   isVisible,
 }) => {
+  const styles = useStyle();
   const webViewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<string | null>(null);
-  const statusBarHeight = StatusBar.currentHeight || 0;
 
   const handleNavigationStateChange = (navState: any) => {
     try {
@@ -91,6 +91,26 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
 
   const startPaymentProcessing = useCallback(async () => {
     try {
+      const paymentInfo = {
+        public_key: payment.public_key,
+        tx_ref: payment.tx_ref,
+        amount: payment.amount,
+        currency: payment.currency || 'NGN',
+        customer: {
+          email: payment.customer.email,
+          phonenumber: payment.customer.phonenumber,
+          name: payment.customer.name,
+        },
+        customizations: payment.customizations,
+        redirect_url: payment.redirect_url || 'https://google.com',
+        meta: payment.meta,
+        payment_plan: payment.payment_plan,
+        subaccounts: payment.subaccounts,
+        payment_options: payment.payment_options,
+        configuration: {
+          max_retry_attempt: payment.max_retry_attempt,
+        },
+      };
       const getHtml = await fetch(
         'https://checkout.flutterwave.com/v3/hosted/pay',
         {
@@ -106,31 +126,12 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
           },
-          body: JSON.stringify({
-            public_key: payment.public_key,
-            tx_ref: payment.tx_ref,
-            amount: payment.amount,
-            currency: payment.currency || 'NGN',
-            customer: {
-              email: payment.customer.email,
-              phonenumber: payment.customer.phonenumber,
-              name: payment.customer.name,
-            },
-            customizations: payment.customizations,
-            redirect_url: payment.redirect_url || 'https://google.com',
-            meta: payment.meta,
-            payment_plan: payment.payment_plan,
-            subaccounts: payment.subaccounts,
-            payment_options: payment.payment_options,
-            configuration: {
-              max_retry_attempt: payment.max_retry_attempt,
-            },
-          }),
+          mode: 'no-cors',
+          body: JSON.stringify(paymentInfo),
         }
       );
-
       if (!getHtml.ok) {
-        setHtml(null);
+        if (html) setHtml(null);
         Alert.alert('Error', 'Payment initialization failed.', [
           {
             text: 'Try again',
@@ -140,13 +141,15 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
         return;
       }
       const response = await getHtml.text();
+      console.log(144);
       setHtml(response);
     } catch (error) {
-      console.log(error);
+      console.log(error, 147);
     }
-  }, [payment]);
+  }, [payment, html]);
 
   useEffect(() => {
+    console.log(isVisible, ' ', 'html to be used');
     if (isVisible && !html) {
       startPaymentProcessing();
     }
@@ -160,7 +163,6 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
           if (webViewRef.current) {
             setHtml(null);
           }
-
           if (typeof payment.on_cancel === 'function') {
             payment.on_cancel({
               status: 'cancelled',
@@ -180,59 +182,57 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
     <Modal
       visible={isVisible}
       transparent={true}
-      style={[Styles.modal, { top: statusBarHeight }]}
+      animationType="slide"
+      style={[styles.modal]}
     >
-      <View style={[Styles.content]}>
+      <SafeAreaView style={[styles.mainContent]}>
         {!loading && (
           <TouchableOpacity
             onPress={() => cacelProcess()}
-            style={Styles.closer}
+            style={styles.closer}
           >
-            <Text style={Styles.closerText}>✖</Text>
+            <Text style={styles.closerText}>✖</Text>
           </TouchableOpacity>
         )}
         {loading && (
           <ActivityIndicator
             size="large"
             color="#0000ff"
-            style={Styles.activity}
+            style={styles.activity}
           />
         )}
-        {html && (
+        {typeof html === 'string' && (
           <WebView
-            style={[Styles.WebView]}
+            style={[styles.WebView]}
             ref={webViewRef}
-            source={{ html: html }}
+            source={{ html }}
             originWhitelist={['*']}
             mixedContentMode="always"
             javaScriptEnabled={true}
             domStorageEnabled={true}
-            onLoadStart={() => setLoading(true)}
-            onLoadProgress={({ nativeEvent }) => {
-              console.log(nativeEvent.progress, 'loging progress');
-              // setProgress(nativeEvent.progress);
+            allowsInlineMediaPlayback={true}
+            startInLoadingState={Platform.OS === 'android'}
+            setSupportMultipleWindows={false}
+            mediaPlaybackRequiresUserAction={false}
+            allowFileAccessFromFileURLs={true}
+            allowUniversalAccessFromFileURLs={true}
+            webviewDebuggingEnabled={true}
+            dataDetectorTypes="all"
+            onLoadStart={() => {
+              if (!loading) setLoading(true);
             }}
-            onLoadEnd={() => setLoading(false)}
+            onLoadEnd={() => {
+              if (loading) setLoading(false);
+            }}
             onNavigationStateChange={handleNavigationStateChange}
             onError={(syntheticEvent) => {
               const { nativeEvent } = syntheticEvent;
-              console.warn('WebView error: ', nativeEvent);
               payment.on_failure({
                 status: 'aborted',
                 tx_ref: '',
                 transaction_id: '',
+                message: nativeEvent?.description,
               });
-            }}
-            onShouldStartLoadWithRequest={(request) => {
-              // request.url.startsWith('https://reactnative.dev')
-              const furl = 'https://checkout.flutterwave.com';
-              const furl2 = 'https://flutterwave.com';
-              const furl3 = payment.redirect_url || 'https://google.com';
-              return (
-                request.url.startsWith(furl) ||
-                request.url.startsWith(furl2) ||
-                request.url.startsWith(furl3)
-              );
             }}
             onHttpError={(syntheticEvent) => {
               const { nativeEvent } = syntheticEvent;
@@ -241,70 +241,14 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
                 status: 'aborted',
                 tx_ref: '',
                 transaction_id: '',
+                message: nativeEvent?.description,
               });
             }}
           />
         )}
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };
-
-const Styles = StyleSheet.create({
-  modal: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-  },
-  activity: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    zIndex: 99,
-  },
-  content: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight || 15,
-    backgroundColor: '#fff',
-    padding: 0,
-    minWidth: '100%',
-    minHeight: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  WebView: {
-    backgroundColor: '#fff',
-    width: '100%',
-    height: '100%',
-  },
-  closer: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    alignSelf: 'flex-end',
-    zIndex: 999,
-    backgroundColor: '#f9f9f9',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    right: 5,
-    top: StatusBar.currentHeight || 15,
-    borderRadius: 25,
-  },
-  closerText: {
-    color: 'red',
-    maxWidth: 40,
-    textAlign: 'center',
-  },
-});
 
 export default PaymentWebView;

@@ -7,6 +7,11 @@
     "entryPoint": "./App.js",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+     "packagerOpts": {
+      "https": true,
+      "cert": "/Users/mberevnicholas/localhost+2.pem",
+      "key": "/Users/mberevnicholas/localhost+2-key.pem" 
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

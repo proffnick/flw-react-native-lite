@@ -73,6 +73,7 @@
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
+    "@types/resolve": "^1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.1.0",
     "eslint": "^8.51.0",
@@ -200,6 +201,7 @@
     "version": "0.41.0"
   },
   "dependencies": {
-    "react-native-webview": "^13.8.6"
+    "react-native-webview": "13.8.6",
+    "resolve": "^1.22.8"
   }
 }

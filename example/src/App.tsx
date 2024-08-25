@@ -14,10 +14,11 @@ const App = () => {
 
   // Define the payment details as per the PaymentProp interface
   // FLWPUBK_TEST-2c765c23876cc845b077f1504e3e715e-X // TEST
+  // FLWPUBK-e7df4e140e9dd7add0ccf71429683900-X
   const paymentDetails: PaymentProp = {
     public_key: 'FLWPUBK_TEST-2c765c23876cc845b077f1504e3e715e-X',
     tx_ref: 'TX12345' + Math.floor((Math.random() + 1) * 1324600075).toString(),
-    amount: 1000,
+    amount: 200,
     currency: 'NGN',
     redirect_url: 'https://www.google.com/',
     on_success: (response: ReturnObject) => {
@@ -36,14 +37,17 @@ const App = () => {
       showMessage('Payment Cancelled', 'Payment Cancelled');
     },
     customer: {
-      email: 'customer_email@gmail.com',
-      phonenumber: '+2349034313680',
-      name: 'Cuatomer_name',
+      email: 'example@gmail.com',
+      phonenumber: '+234903431300',
+      name: 'Mberev Nicholas',
     },
     customizations: {
       title: 'Pay MeterToken',
       description: 'You are paying MeterToken',
       logo: 'https://metertoken.ng/logo.png',
+    },
+    meta: {
+      token: Math.floor((Math.random() + 1) * 1324600095).toString(),
     },
   };
 

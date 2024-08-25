@@ -8,6 +8,10 @@ Simple lightweight payment module for Flutterwave payment system in a react-nati
 npm install flw-react-native-lite
 ```
 
+## Dependency
+
+This package requires ` react-native-webview@13.8.6`, and is best suited with Typescript based react-native applications.
+
 ## Usage
 
 ```js
@@ -25,32 +29,32 @@ const App = () => {
 
   // Define the payment details as per the PaymentProp interface
   const paymentDetails: PaymentProp = {
-    public_key: "Your public key",
-    tx_ref: "TX12345"+Math.floor(((Math.random() + 1) * 1324600075)).toString(),
-    amount: 1000,
-    currency: "NGN",
-    redirect_url: "https://www.google.com/",
-    on_success: (response:ReturnObject) => {
+    public_key: "Your public key", // required (https://flutterwavedoc.readme.io/v2.0/docs/api-keys)
+    tx_ref: "TX12345"+Math.floor(((Math.random() + 1) * 1324600075)).toString(), //  required
+    amount: 1000, // required
+    currency: "NGN", // Required
+    redirect_url: "https://www.google.com/", // optional callback url in case you need one
+    on_success: (response:ReturnObject) => { // required
       console.log(response, "21");// {status: 'successful' | 'completed', tx_rf: "ref", transaction_id: '12345'}
       setPaymentVisible(false);
     },
-    on_failure: (response:ReturnObject) => {
+    on_failure: (response:ReturnObject) => { // required to handle failures
       console.log(response, "25");
       setPaymentVisible(false);
     },
-    on_cancel: (response:ReturnObject) =>{
+    on_cancel: (response:ReturnObject) =>{ // required to handle cancel event
       setPaymentVisible(false);
       console.log(response, "21");
     },
     customer: {
-      email: "customer_email@gmail.com",
-      phonenumber: "+2349034313680",
-      name: "Cuatomer_name"
+      email: "customer_email@gmail.com", // required
+      phonenumber: "+2349034313680", // optional
+      name: "Cuatomer_name" // optional
     },
-    customizations: {
-      title: 'your business name',
-      description: 'You are paying businessname',
-      logo: 'https://example.com/logo.png'
+    customizations: { // optional
+      title: 'your business name', // optional
+      description: 'You are paying businessname', // optional
+      logo: 'https://example.com/logo.png' // optional
     }
   };
 
@@ -85,9 +89,15 @@ export default App;
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
+## Custom Support
+
+For custom support, send an email to me at [nickmberev[at]gmail.com](mailto:nickmberev@gmail.com)
+
 ## License
 
 MIT
+
+Free for distribution.
 
 ---
 
