@@ -42,18 +42,18 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
           actionResult.status === 'successful' ||
           actionResult.status === 'completed'
         ) {
-          payment.on_success(actionResult);
+          payment.onSuccess(actionResult);
         }
 
         if (actionResult.status === 'cancelled') {
-          payment?.on_cancel(actionResult);
+          payment?.onCancel(actionResult);
         }
 
         if (
           actionResult.status === 'aborted' ||
           actionResult.status === 'unknown'
         ) {
-          payment?.on_failure(actionResult);
+          payment?.onFailure(actionResult);
         }
 
         setHtml(null);
@@ -86,6 +86,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
         status: 'aborted' as statusType,
         tx_ref: '',
         transaction_id: '',
+        message: JSON.stringify(url),
       };
     }
   };
@@ -165,8 +166,8 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
           if (webViewRef.current) {
             setHtml(null);
           }
-          if (typeof payment.on_cancel === 'function') {
-            payment.on_cancel({
+          if (typeof payment.onCancel === 'function') {
+            payment.onCancel({
               status: 'cancelled',
               tx_ref: '',
               transaction_id: '',
@@ -229,7 +230,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
             onNavigationStateChange={handleNavigationStateChange}
             onError={(syntheticEvent) => {
               const { nativeEvent } = syntheticEvent;
-              payment.on_failure({
+              payment.onFailure({
                 status: 'aborted',
                 tx_ref: '',
                 transaction_id: '',
@@ -239,7 +240,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
             onHttpError={(syntheticEvent) => {
               const { nativeEvent } = syntheticEvent;
               console.warn('WebView HTTP error: ', nativeEvent);
-              payment.on_failure({
+              payment.onFailure({
                 status: 'aborted',
                 tx_ref: '',
                 transaction_id: '',

@@ -86,9 +86,9 @@ export interface PaymentProp {
   amount: number;
   currency?: currencyTypes;
   redirect_url?: string;
-  on_success: (success: ReturnObject) => void;
-  on_failure: (failure: ReturnObject) => void;
-  on_cancel: (cancel: ReturnObject) => void;
+  onSuccess: (success: ReturnObject) => void;
+  onFailure: (failure: ReturnObject) => void;
+  onCancel: (cancel: ReturnObject) => void;
   customer: Customer;
   max_retry_attempt?: number;
   customizations?: Customizations;

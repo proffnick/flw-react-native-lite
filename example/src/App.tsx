@@ -21,17 +21,17 @@ const App = () => {
     amount: 200,
     currency: 'NGN',
     redirect_url: 'https://www.google.com/',
-    on_success: (response: ReturnObject) => {
+    onSuccess: (response: ReturnObject) => {
       showMessage('Payment Successful', 'Payment Successful');
       console.log(response, '21');
       setPaymentVisible(false);
     },
-    on_failure: (response: ReturnObject) => {
+    onFailure: (response: ReturnObject) => {
       showMessage('Payment Failed', 'Payment Failed');
       console.log(response, '25');
       setPaymentVisible(false);
     },
-    on_cancel: (response: ReturnObject) => {
+    onCancel: (response: ReturnObject) => {
       setPaymentVisible(false);
       console.log(response, '21');
       showMessage('Payment Cancelled', 'Payment Cancelled');
