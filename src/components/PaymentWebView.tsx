@@ -82,11 +82,12 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
       if (transactionId) rObject.transaction_id = transactionId;
       return rObject;
     } catch (error) {
+      console.error('Error parsing URL:', error);
       return {
         status: 'aborted' as statusType,
         tx_ref: '',
         transaction_id: '',
-        message: JSON.stringify(url),
+        message: JSON.stringify(url) + ' | ' + JSON.stringify(error),
       };
     }
   };
