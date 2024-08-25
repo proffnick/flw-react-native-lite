@@ -1,3 +1,5 @@
+import { ViewStyle, TextStyle } from 'react-native';
+
 export interface Customer {
   name?: string;
   email: string;
@@ -26,6 +28,15 @@ export type statusType =
   | 'completed'
   | 'aborted'
   | 'unknown';
+export interface Styles {
+  modal: ViewStyle;
+  activity: ViewStyle;
+  content: ViewStyle;
+  WebView: ViewStyle;
+  closer: ViewStyle;
+  closerText: TextStyle;
+  mainContent?: ViewStyle;
+}
 type currencyTypes =
   | 'NGN'
   | 'US'
@@ -45,6 +56,7 @@ export interface ReturnObject {
   status: statusType;
   tx_ref: string;
   transaction_id?: string;
+  message?: string;
 }
 
 export const paymentTypes = [
