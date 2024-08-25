@@ -34,16 +34,16 @@ const App = () => {
     amount: 1000, // required
     currency: "NGN", // Required
     redirect_url: "https://www.google.com/", // optional callback url in case you need one
-    on_success: (response:ReturnObject) => { // required
+    onSuccess: (response:ReturnObject) => { // required
       console.log(response, "21");// {status: 'successful' | 'completed', tx_rf: "ref", transaction_id: '12345'}
       setPaymentVisible(false);
     },
-    on_failure: (response:ReturnObject) => { // required to handle failures
-      console.log(response, "25");
+    onFailure: (response:ReturnObject) => { // required to handle failures
+      console.log(response, "25"); // {status: 'aborted' | 'unknown', tx_rf: "ref", transaction_id: ''}
       setPaymentVisible(false);
     },
-    on_cancel: (response:ReturnObject) =>{ // required to handle cancel event
-      setPaymentVisible(false);
+    onCancel: (response:ReturnObject) =>{ // required to handle cancel event
+      setPaymentVisible(false); // {status: 'cancelled', tx_rf: "ref", transaction_id: ''}
       console.log(response, "21");
     },
     customer: {
