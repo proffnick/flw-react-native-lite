@@ -72,8 +72,8 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
         tx_ref: '',
         transaction_id: '',
       };
-      const urlObj = new URL(url);
-      const params = new URLSearchParams(urlObj.search);
+      const urlObj = url.split('?')[1];
+      const params = new URLSearchParams(urlObj);
       const status = params.get('status') as statusType;
       const txRef = params.get('tx_ref');
       const transactionId = params.get('transaction_id');
