@@ -11,6 +11,7 @@ import {
 import { WebView } from 'react-native-webview';
 import { PaymentProp, ReturnObject, statusType } from '../types/PaymentProp';
 import useStyle from '../hooks/useStyle';
+import 'url-search-params-polyfill';
 
 interface PaymentWebViewProps {
   payment: PaymentProp;
@@ -153,14 +154,13 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
   }, [payment, html]);
 
   useEffect(() => {
-    console.log(isVisible, ' ', 'html to be used');
     if (isVisible && !html) {
       startPaymentProcessing();
     }
   }, [isVisible, startPaymentProcessing, html]);
 
-  const cacelProcess = () => {
-    Alert.alert('Conform', 'Are you sure you want to cancel payment?', [
+  const cancelProcess = () => {
+    Alert.alert('Confirm', 'Are you sure you want to cancel payment?', [
       {
         text: 'YES',
         onPress: () => {
@@ -192,7 +192,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
       <SafeAreaView style={[styles.mainContent]}>
         {!loading && (
           <TouchableOpacity
-            onPress={() => cacelProcess()}
+            onPress={() => cancelProcess()}
             style={styles.closer}
           >
             <Text style={styles.closerText}>✖</Text>
