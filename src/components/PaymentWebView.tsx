@@ -28,8 +28,9 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
   const [html, setHtml] = useState<string | null>(null);
 
   const handleNavigationStateChange = (navState: any) => {
+    // console.log(navState, " nav state");
     try {
-      const rdr = payment?.redirect_url || 'https://google.com';
+      const rdr = payment?.redirect_url || 'https://example.com';
       if (navState.url.includes(rdr)) {
         if (webViewRef.current) {
           if (webViewRef.current.clearCache)
@@ -38,23 +39,50 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
             webViewRef.current.clearHistory();
           webViewRef.current.stopLoading();
         }
-        const actionResult: ReturnObject = getActionResult(navState.url);
-        if (
-          actionResult.status === 'successful' ||
-          actionResult.status === 'completed'
-        ) {
-          payment.onSuccess(actionResult);
-        }
 
-        if (actionResult.status === 'cancelled') {
-          payment?.onCancel(actionResult);
-        }
+        const urlParams = new URLSearchParams(navState.url.split('?')[1]);
+        const responseParam = urlParams.get('response');
+        if (responseParam) {
+          try {
+            // Decode and parse the JSON response
+            const decodedResponse = decodeURIComponent(responseParam);
+            const actionResult: ReturnObject = JSON.parse(decodedResponse);
+            // Determine the response status and call appropriate handlers
+            if (
+              actionResult.status === 'successful' ||
+              actionResult.status === 'completed'
+            ) {
+              payment.onSuccess(actionResult);
+            } else if (actionResult.status === 'cancelled') {
+              payment?.onCancel(actionResult);
+            } else if (
+              actionResult.status === 'aborted' ||
+              actionResult.status === 'unknown'
+            ) {
+              payment?.onFailure(actionResult);
+            }
+          } catch (error) {
+            console.warn(error);
+          }
+        } else {
+          const actionResult: ReturnObject = getActionResult(navState.url);
+          if (
+            actionResult.status === 'successful' ||
+            actionResult.status === 'completed'
+          ) {
+            payment.onSuccess(actionResult);
+          }
 
-        if (
-          actionResult.status === 'aborted' ||
-          actionResult.status === 'unknown'
-        ) {
-          payment?.onFailure(actionResult);
+          if (actionResult.status === 'cancelled') {
+            payment?.onCancel(actionResult);
+          }
+
+          if (
+            actionResult.status === 'aborted' ||
+            actionResult.status === 'unknown'
+          ) {
+            payment?.onFailure(actionResult);
+          }
         }
 
         setHtml(null);
@@ -66,7 +94,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
     }
   };
 
-  const getActionResult = (url: string = 'https://google.com') => {
+  const getActionResult = (url: string = 'https://example.com') => {
     try {
       const rObject: ReturnObject = {
         status: 'unknown',
@@ -95,7 +123,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
 
   const startPaymentProcessing = useCallback(async () => {
     try {
-      const rdr = payment?.redirect_url || 'https://google.com';
+      const rdr = payment?.redirect_url || 'https://example.com';
       const paymentInfo = {
         public_key: payment.public_key,
         tx_ref: payment.tx_ref,
