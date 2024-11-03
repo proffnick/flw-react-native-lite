@@ -55,6 +55,7 @@ type currencyTypes =
 export interface ReturnObject {
   status: statusType;
   tx_ref: string;
+  txRef?: string;
   transaction_id?: string;
   message?: string;
 }

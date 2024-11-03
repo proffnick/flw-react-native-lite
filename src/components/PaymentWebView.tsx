@@ -28,7 +28,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
   const [html, setHtml] = useState<string | null>(null);
 
   const handleNavigationStateChange = (navState: any) => {
-    console.log(navState, 'nav state');
+    // console.log(navState, 'nav state');
     try {
       const rdr = payment?.redirect_url || 'https://example.com';
       if (navState.url.includes(rdr)) {
@@ -48,7 +48,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
               // Decode and parse the JSON response
               const decodedResponse = decodeURIComponent(responseParam);
               const actionResult: ReturnObject = JSON.parse(decodedResponse);
-              console.log(actionResult, 51);
+              // console.log(actionResult, 51);
               // Determine the response status and call appropriate handlers
               if (
                 actionResult.status === 'successful' ||
