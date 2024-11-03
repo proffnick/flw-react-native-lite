@@ -28,7 +28,7 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
   const [html, setHtml] = useState<string | null>(null);
 
   const handleNavigationStateChange = (navState: any) => {
-    // console.log(navState, " nav state");
+    console.log(navState, 'nav state');
     try {
       const rdr = payment?.redirect_url || 'https://example.com';
       if (navState.url.includes(rdr)) {
@@ -40,57 +40,62 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
           webViewRef.current.stopLoading();
         }
 
-        const urlParams = new URLSearchParams(navState.url.split('?')[1]);
-        const responseParam = urlParams.get('response');
-        if (responseParam) {
-          try {
-            // Decode and parse the JSON response
-            const decodedResponse = decodeURIComponent(responseParam);
-            const actionResult: ReturnObject = JSON.parse(decodedResponse);
-            // Determine the response status and call appropriate handlers
+        try {
+          const urlParams = new URLSearchParams(navState.url.split('?')[1]);
+          const responseParam = urlParams.get('response');
+          if (responseParam) {
+            try {
+              // Decode and parse the JSON response
+              const decodedResponse = decodeURIComponent(responseParam);
+              const actionResult: ReturnObject = JSON.parse(decodedResponse);
+              console.log(actionResult, 51);
+              // Determine the response status and call appropriate handlers
+              if (
+                actionResult.status === 'successful' ||
+                actionResult.status === 'completed'
+              ) {
+                payment.onSuccess(actionResult);
+              } else if (actionResult.status === 'cancelled') {
+                payment?.onCancel(actionResult);
+              } else if (
+                actionResult.status === 'aborted' ||
+                actionResult.status === 'unknown'
+              ) {
+                payment?.onFailure(actionResult);
+              }
+            } catch (error) {
+              console.warn(error, 'error parsing');
+            }
+          } else {
+            const actionResult: ReturnObject = getActionResult(navState.url);
             if (
               actionResult.status === 'successful' ||
               actionResult.status === 'completed'
             ) {
               payment.onSuccess(actionResult);
-            } else if (actionResult.status === 'cancelled') {
+            }
+
+            if (actionResult.status === 'cancelled') {
               payment?.onCancel(actionResult);
-            } else if (
+            }
+
+            if (
               actionResult.status === 'aborted' ||
               actionResult.status === 'unknown'
             ) {
               payment?.onFailure(actionResult);
             }
-          } catch (error) {
-            console.warn(error);
-          }
-        } else {
-          const actionResult: ReturnObject = getActionResult(navState.url);
-          if (
-            actionResult.status === 'successful' ||
-            actionResult.status === 'completed'
-          ) {
-            payment.onSuccess(actionResult);
           }
 
-          if (actionResult.status === 'cancelled') {
-            payment?.onCancel(actionResult);
-          }
-
-          if (
-            actionResult.status === 'aborted' ||
-            actionResult.status === 'unknown'
-          ) {
-            payment?.onFailure(actionResult);
-          }
+          setHtml(null);
+          // Close the modal or WebView
+          return;
+        } catch (error) {
+          console.log(error, 'error parsing 93');
         }
-
-        setHtml(null);
-        // Close the modal or WebView
-        return;
       }
     } catch (error) {
-      console.log(error);
+      console.log(error, 'error parsing 97');
     }
   };
 
