@@ -20,7 +20,7 @@ const App = () => {
     tx_ref: 'TX12345' + Math.floor((Math.random() + 1) * 1324600075).toString(),
     amount: 200,
     currency: 'NGN',
-    redirect_url: 'https://www.google.com/',
+    redirect_url: 'https://example.com/',
     onSuccess: (response: ReturnObject) => {
       showMessage('Payment Successful', 'Payment Successful');
       console.log(response, '21');
