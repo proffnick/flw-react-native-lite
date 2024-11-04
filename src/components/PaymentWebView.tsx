@@ -26,9 +26,9 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
   const webViewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<string | null>(null);
+  const hasLoaded = useRef<boolean>(false);
 
   const handleNavigationStateChange = (navState: any) => {
-    // console.log(navState, 'nav state');
     try {
       const rdr = payment?.redirect_url || 'https://example.com';
       if (navState.url.includes(rdr)) {
@@ -256,9 +256,13 @@ const PaymentWebView: React.FC<PaymentWebViewProps> = ({
             webviewDebuggingEnabled={true}
             dataDetectorTypes="all"
             onLoadStart={() => {
+              if (hasLoaded.current === true && Platform.OS === 'android') {
+                return;
+              }
               if (!loading) setLoading(true);
             }}
             onLoadEnd={() => {
+              hasLoaded.current = true;
               if (loading) setLoading(false);
             }}
             onNavigationStateChange={handleNavigationStateChange}
