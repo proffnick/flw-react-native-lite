@@ -1,7 +1,7 @@
 {
   "name": "flw-react-native-lite",
   "version": "2.2.0",
-  "description": "Simple lightweight payment module for Flutterwave payment system in a react-native application, fast and robust",
+  "description": "Simple lightweight payment module for Flutterwave payment system in a react-native application, fast and robust.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
