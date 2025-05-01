@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "example",
+    "slug": "example",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "entryPoint": "./App.js",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+     "packagerOpts": {
+      "https": true,
+      "cert": "/Users/mberevnicholas/localhost+2.pem",
+      "key": "/Users/mberevnicholas/localhost+2-key.pem" 
+    },
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "flwreactnativelite.example"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "flwreactnativelite.example"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "flw-react-native-lite-example",
+  "version": "1.0.0",
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start --https",
+    "android": "expo start --android --https",
+    "ios": "expo start --ios --https",
+    "web": "expo start --web --https"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~3.2.3",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "expo": "~51.0.28",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-web": "~0.19.10",
+    "react-native-webview": "13.8.6",
+    "resolve": "^1.22.8"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/resolve": "^1",
+    "react-native-builder-bob": "^0.30.0"
+  },
+  "private": true
+}
