@@ -1,9 +1,9 @@
 {
   "name": "flw-react-native-lite-example",
-  "version": "1.0.0",
-  "main": "expo/AppEntry.js",
+  "version": "1.1.0",
+  "main": "./App.js",
   "scripts": {
-    "start": "expo start --https",
+    "start": "expo start --https -c",
     "android": "expo start --android --https",
     "ios": "expo start --ios --https",
     "web": "expo start --web --https"
@@ -17,7 +17,7 @@
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
     "react-native-web": "~0.19.10",
-    "react-native-webview": "13.8.6",
+    "react-native-webview": "^13.13.5",
     "resolve": "^1.22.8"
   },
   "devDependencies": {
