@@ -1,6 +1,6 @@
 {
   "name": "flw-react-native-lite",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Simple lightweight payment module for Flutterwave payment system in a react-native application, fast and robust.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -102,6 +102,7 @@
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-native": "^0.74.5",
+    "react-native-webview": "13.8.6",
     "react-native-builder-bob": "^0.30.0",
     "release-it": "^15.0.0",
     "typescript": "^5.2.2"
@@ -111,7 +112,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-webview": "^13.8.6"
   },
   "workspaces": [
     "example"
@@ -220,7 +222,6 @@
     "version": "0.41.0"
   },
   "dependencies": {
-    "react-native-webview": "^13.13.5",
     "resolve": "^1.22.8",
     "url-search-params-polyfill": "^8.2.5"
   }
